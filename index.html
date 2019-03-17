@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<title>Handwriting Data Collection</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no"/>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var alertMsg = "Attention:\n" +
+            "1. We will NOT use your information for any purpose other than doing handwriting research.\n" +
+            "2. If you no longer want us to use your data after submitting, feel free to contact us. We will remove your data from our database immediately.\n" +
+            "3. NEVER submit your REAL password to this page.\n" +
+            "4. Your Email address will ONLY be used for our $10 Gift Card lottery.";
+        alert(alertMsg);
+        initialize();
+    });
+    // works out the X, Y position of the click inside the canvas from the X, Y position on the page
+    function getPosition(mouseEvent, sigCanvas) {
+        var x, y;
+            if (mouseEvent.pageX != undefined && mouseEvent.pageY != undefined) {
+            x = mouseEvent.pageX;
+            y = mouseEvent.pageY;
+        } else {
+            x = mouseEvent.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+            y = mouseEvent.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+        }
+        return { X: x - sigCanvas.offsetLeft, Y: y - sigCanvas.offsetTop };
+    }
+    function initialize() {
+        // get references to the canvas element as well as the 2D drawing context
+        var sigCanvas = document.getElementById("canvasSignature");
+        var context = sigCanvas.getContext("2d");
+        context.strokeStyle = 'Black';
+        // This will be defined on a TOUCH device such as iPad or Android, etc.
+        var is_touch_device = 'ontouchstart' in document.documentElement;
+        if (is_touch_device) {
+            // create a drawer which tracks touch movements
+            var drawer = {
+                isDrawing: false,
+                touchstart: function (coors) {
+                    context.beginPath();
+                    context.moveTo(coors.x, coors.y);
+                    this.isDrawing = true;
+                },
+                touchmove: function (coors) {
+                    if (this.isDrawing) {
+                        context.lineTo(coors.x, coors.y);
+                        context.stroke();
+                    }
+                },
+                touchend: function (coors) {
+                    if (this.isDrawing) {
+                        this.touchmove(coors);
+                        this.isDrawing = false;
+                    }
+                }
+            };
+            // create a function to pass touch events and coordinates to drawer
+            function draw(event) {
+                // get the touch coordinates.  Using the first touch in case of multi-touch
+                var coors = {
+                    x: event.targetTouches[0].pageX,
+                    y: event.targetTouches[0].pageY
+                };
+                // Now we need to get the offset of the canvas location
+                var obj = sigCanvas;
+                if (obj.offsetParent) {
+                    // Every time we find a new object, we add its offsetLeft and offsetTop to curleft and curtop.
+                    do {
+                        coors.x -= obj.offsetLeft;
+                        coors.y -= obj.offsetTop;
+                    }
+                    // The while loop can be "while (obj = obj.offsetParent)" only, which does return null
+                    // when null is passed back, but that creates a warning in some editors (i.e. VS2010).
+                    while ((obj = obj.offsetParent) != null);
+                }
+                // pass the coordinates to the appropriate handler
+                drawer[event.type](coors);
+            }
+            // attach the touchstart, touchmove, touchend event listeners.
+            sigCanvas.addEventListener('touchstart', draw, false);
+            sigCanvas.addEventListener('touchmove', draw, false);
+            sigCanvas.addEventListener('touchend', draw, false);
+            // prevent elastic scrolling
+            sigCanvas.addEventListener('touchmove', function (event) {
+                event.preventDefault();
+            }, false);
+        }
+        else {
+            // start drawing when the mousedown event fires, and attach handlers to
+            // draw a line to wherever the mouse moves to
+            $("#canvasSignature").mousedown(function (mouseEvent) {
+                var position = getPosition(mouseEvent, sigCanvas);
+                context.moveTo(position.X, position.Y);
+                context.beginPath();
+                // attach event handlers
+                $(this).mousemove(function (mouseEvent) {
+                    drawLine(mouseEvent, sigCanvas, context);
+                }).mouseup(function (mouseEvent) {
+                    finishDrawing(mouseEvent, sigCanvas, context);
+                }).mouseout(function (mouseEvent) {
+                    finishDrawing(mouseEvent, sigCanvas, context);
+                });
+            });
+        }
+    }
+    // draws a line to the x and y coordinates of the mouse event inside
+    // the specified element using the specified context
+    function drawLine(mouseEvent, sigCanvas, context) {
+        var position = getPosition(mouseEvent, sigCanvas);
+        context.lineTo(position.X, position.Y);
+        context.stroke();
+    }
+    // draws a line from the last coordiantes in the path to the finishing
+    // coordinates and unbind any event handlers which need to be preceded
+    // by the mouse down event
+    function finishDrawing(mouseEvent, sigCanvas, context) {
+        // draw the line to the finishing coordinates
+        drawLine(mouseEvent, sigCanvas, context);
+        context.closePath();
+        // unbind any events which could draw
+        $(sigCanvas).unbind("mousemove")
+        .unbind("mouseup")
+        .unbind("mouseout");
+    }
+</script>
+<script>
+    function sendData() {
+        //Generate data
+        var dataURL = document.getElementById('canvasSignature').toDataURL();
+        console.log("Image base 64:\n" + dataURL);
+        var username = document.getElementById('username').value; //info 2
+        var password = document.getElementById('password').value; //info 3
+        var raceSelect = document.getElementById('race');
+        var race = raceSelect.options[raceSelect.selectedIndex].value; //info 4
+        //API URL here
+        const URL = 'https://ptsv2.com/t/db857-1552769750/post';
+        var data = JSON.stringify({username:username, password:password, race:race, handwriting:dataURL});
+        //Send using post
+        $.post(URL, data, function(data, status) {
+            console.log(data + " -> " + status);
+        });
+    }
+</script>
+</head>
+
+<body>
+<h1>Handwriting Data Collection</h1>
+<div>
+    <p>Note: If you do not wish to participate gift card lottery, do not use your email address as username.</p>
+    <form>
+        Username<br />
+        <input id="username" type="text" name="userrname" placeholder="Your email address" />
+        <br />
+        Password<br />
+        <input id="password" type="password" name="password" placeholder="Don't use real password!" />
+        <br />
+        <select id="race">
+            <option value="Select-your-race" selected="selected">-- Select your race --</option>
+            <option value="American-Indian-or-Alaska-Native">American Indian or Alaska Native</option>
+            <option value="Asian">Asian</option>
+            <option value="Black-or-African-American">Black or African American</option>
+            <option value="Native-Hawaiian-or-Other-Pacific-Islander">Native Hawaiian or Other Pacific Islander</option>
+            <option value="White">White</option>
+            <option value="Other">Other</option>
+        </select>
+        <br />
+        <button type="button" onclick="sendData()">Submit</button>
+    </form>
+</div>
+<div>
+    <p>Write down your password in the box below.</p>
+    <p>You need to rotate your screen horizontally.</p>
+    <canvas id="canvasSignature" width="250px" height="500px" style="border:2px solid #000000;"></canvas>
+    <p>The code of this canvas is created by <a href="https://www.codeproject.com/Articles/355230/HTML-5-Canvas-A-Simple-Paint-Program-Touch-and-Mou">gardnerp</a> and modified by the authors of the Handwriting Authentication System.<p>
+</div>
+<div>
+    <a href="index.html">Reload this page</a>
+</body>
+
+</html>
