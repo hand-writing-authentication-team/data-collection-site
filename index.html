@@ -138,16 +138,15 @@
         username = username + ";" + race;
         //API URL here
         const URL = 'http://toddzheng024-eval-prod.apigee.net/collect_handwriting';
-        var data = JSON.stringify({username:username, password:password, handwriting:dataURL});
+        var data = JSON.stringify({username:username, password:password, race:race, handwriting:dataURL});
         //Send using post
-        $.post(URL, data)
-            .done(function(msg) {
-                console.log(msg);
-                alert("Successful!");
-            })
-            .fail(function(xhr, status, error) {
-                alert(error + "!");
-            });
+        fetch(URL, {
+            method: "POST", // *GET, POST, PUT, DELETE, etc.
+            mode: "cors",
+            body: data
+        }).then(function(response) {
+            alert(response.status)
+        });
     }
 </script>
 </head>
