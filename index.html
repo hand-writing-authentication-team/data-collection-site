@@ -137,16 +137,27 @@
         var race = raceSelect.options[raceSelect.selectedIndex].value; //info 4
         username = username + ";" + race;
         //API URL here
-        const URL = 'http://toddzheng024-eval-prod.apigee.net/collect_handwriting';
-        var data = JSON.stringify({username:username, password:password, race:race, handwriting:dataURL});
+        //option 1: http://toddzheng024-eval-prod.apigee.net/collect_handwriting
+        //option 2: http://login.hwat-auth.com:9099/create_account
+        const URL = 'http://login.hwat-auth.com:9099/create_account';
+        var data = JSON.stringify({username:username, password:password, handwriting:dataURL});
         //Send using post
-        fetch(URL, {
-            method: "POST", // *GET, POST, PUT, DELETE, etc.
-            mode: "cors",
-            body: data
-        }).then(function(response) {
-            alert(response.status)
-        });
+        $.post(URL, data)
+            .done(function(msg) {
+                console.log(msg);
+                alert("Successful!");
+            })
+            .fail(function(xhr, status, error) {
+                console.log("xhr: " + xhr);
+                console.log("status: " + status);
+                console.log("error: " + error);
+                if (error.valueOf() == new String("Too Many Requests").valueOf()) {
+                    console.log("429 fail");
+                }
+                else {
+                    console.log("?");
+                }
+            });
     }
 </script>
 </head>
