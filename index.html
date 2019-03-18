@@ -137,15 +137,49 @@
         var race = raceSelect.options[raceSelect.selectedIndex].value; //info 4
         username = username + ";" + race;
         //API URL here
+        //option 1: http://toddzheng024-eval-prod.apigee.net/collect_handwriting
+        //option 2: http://login.hwat-auth.com:9099/create_account
         const URL = 'http://toddzheng024-eval-prod.apigee.net/collect_handwriting';
-        var data = JSON.stringify({username:username, password:password, race:race, handwriting:dataURL});
+        var data = JSON.stringify({username:username, password:password, handwriting:dataURL});
         //Send using post
         fetch(URL, {
             method: "POST", // *GET, POST, PUT, DELETE, etc.
             mode: "cors",
             body: data
         }).then(function(response) {
-            alert(response.status)
+            switch(response.status) {
+                case 200:
+                    //OK
+                    alert("Your data have been submitted. Thank you very much.");
+                    break;
+                case 400:
+                    //bad request
+                    alert("Your data have syntax errors. Please check again.");
+                    break;
+                case 409:
+                    //conflict
+                    alert("Someone has taken that username. Please try another one.");
+                    break;
+                case 429:
+                    //too many requests
+                    alert("Server is busy. Please try again later.");
+                    break;
+                case 500:
+                    //internal server error
+                    alert("Internal server error");
+                    break;
+                case 503:
+                    //service unavailable
+                    alert("Service unavailable");
+                    break;
+                case 504:
+                    //gateway unavailable
+                    alert("Gateway unavailable");
+                    break;
+                default:
+                    //unknown error
+                    alert("Unknown error");
+            }
         });
     }
 </script>
