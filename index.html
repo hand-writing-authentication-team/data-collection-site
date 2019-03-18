@@ -5,10 +5,10 @@
 <title>Handwriting Data Collection</title>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no"/>
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script type="text/javascript" src="jquery.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
-        var alertMsg = "Attention:\n" +
+        var alertMsg = "=====ATTENTION=====\n" +
             "1. We will NOT use your information for any purpose other than doing handwriting research.\n" +
             "2. If you no longer want us to use your data after submitting, feel free to contact us. We will remove your data from our database immediately.\n" +
             "3. NEVER submit your REAL password to this page.\n" +
@@ -135,13 +135,19 @@
         var password = document.getElementById('password').value; //info 3
         var raceSelect = document.getElementById('race');
         var race = raceSelect.options[raceSelect.selectedIndex].value; //info 4
+        username = username + ";" + race;
         //API URL here
-        const URL = 'https://ptsv2.com/t/db857-1552769750/post';
-        var data = JSON.stringify({username:username, password:password, race:race, handwriting:dataURL});
+        const URL = 'http://toddzheng024-eval-prod.apigee.net/collect_handwriting';
+        var data = JSON.stringify({username:username, password:password, handwriting:dataURL});
         //Send using post
-        $.post(URL, data, function(data, status) {
-            console.log(data + " -> " + status);
-        });
+        $.post(URL, data)
+            .done(function(msg) {
+                console.log(msg);
+                alert("Successful!");
+            })
+            .fail(function(xhr, status, error) {
+                alert(error + "!");
+            });
     }
 </script>
 </head>
