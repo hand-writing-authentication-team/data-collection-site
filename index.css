@@ -1,0 +1,47 @@
+.title {
+    text-align: center;
+}
+
+.boxed {
+    border: 1px solid red;
+    text-align: center;
+    color: gray;
+}
+
+.submitForm {
+    text-align: center;
+}
+
+.description {
+    text-align: center;
+    color: red;
+}
+
+.credit {
+    text-align: center;
+}
+
+.options {
+    text-align: center;
+}
+
+::-webkit-input-placeholder {
+    text-align: center;
+}
+
+:-moz-placeholder { /* Firefox 18- */
+    text-align: center;  
+}
+
+::-moz-placeholder {  /* Firefox 19+ */
+    text-align: center;  
+}
+
+:-ms-input-placeholder {  
+    text-align: center; 
+}
+
+select{
+    text-align-last:center;
+    padding-left: 29px;
+}
