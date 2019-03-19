@@ -5,6 +5,7 @@
 <title>Handwriting Data Collection</title>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no"/>
+<link rel="shortcut icon" href="https://blog.hunterfan.com/wp-content/uploads/sites/5/2017/11/H-Hunter-favicon.jpg"/>
 <link rel="stylesheet" href="index.css">
 <script type="text/javascript" src="jquery.min.js"></script>
 <script type="text/javascript">
@@ -187,6 +188,11 @@
 </head>
 
 <body>
+<div class="logo">
+    <center>
+        <img src="logo_hwat.png" alt="logo" style="width:200px;height:200px;">
+    </center>
+</div>
 <div class="title">
 <h1>Handwriting Data Collection</h1>
 </div>
@@ -201,7 +207,7 @@
         <br />
         Password <br />
         (5-digit alphabetical letters) <br />
-        <input id="password" type="password" name="password" size="37" placeholder="Don't submit real password!" />
+        <input id="password" type="password" name="password" size="37" placeholder="Don't submit real password!" maxlength="5" required/>
         <br />
         <select id="race">
             <option value="Select-your-race" selected="selected">-- Select your race --</option>
@@ -213,12 +219,12 @@
             <option value="Other">Other</option>
         </select>
         <br />
-        <button type="button" onclick="sendData()">Submit</button>
+        <div class="description">
+            <p>Write down your password in the box below.<br />You need to rotate your screen horizontally.<br />Don't write it vertically!</p>
+            <canvas id="canvasSignature" width="300px" height="600px" style="border:2px solid #000000;"></canvas>
+        </div>
+        <button type="button" onclick="sendData()" class="button">Submit</button>
     </form>
-</div>
-<div class="description">
-    <p>Write down your password in the box below.<br />You need to rotate your screen horizontally.<br />Don't write it vertically!</p>
-    <canvas id="canvasSignature" width="250px" height="500px" style="border:2px solid #000000;"></canvas>
 </div>
 <div class="credit">    
 <p>This canvas is created by <a href="https://www.codeproject.com/Articles/355230/HTML-5-Canvas-A-Simple-Paint-Program-Touch-and-Mou">gardnerp</a> and modified by the authors of the Handwriting Authentication System.<p>
