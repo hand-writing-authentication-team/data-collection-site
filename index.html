@@ -187,6 +187,13 @@
         });
     }
 </script>
+<script>
+    function clearSignture() {
+        var sigCanvas = document.getElementById("canvasSignature");
+        var context = sigCanvas.getContext("2d");
+        context.clearRect(0, 0, sigCanvas.width, sigCanvas.height);
+    }
+</script>
 </head>
 
 <body>
@@ -230,6 +237,7 @@
             <canvas id="canvasSignature" width="300px" height="600px" style="border:2px solid #000000;"></canvas>
         </div>
         <button type="button" onclick="sendData()" class="button">Submit</button>
+        <button type="button" onclick="clearSignture()" class="button">Clear</button>
     </form>
 </div>
 
