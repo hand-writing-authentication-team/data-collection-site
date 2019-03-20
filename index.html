@@ -139,12 +139,15 @@
         var password = document.getElementById('password').value; //info 3
         var raceSelect = document.getElementById('race');
         var race = raceSelect.options[raceSelect.selectedIndex].value; //info 4
-        username = username + ";" + race;
+        if (username.length == 0 || password.length == 0) {
+            alert("Your username or password is empty.");
+            return;
+        }
         //API URL here
         //option 1: http://toddzheng024-eval-prod.apigee.net/collect_handwriting
         //option 2: http://login.hwat-auth.com:9099/create_account
         const URL = 'http://toddzheng024-eval-prod.apigee.net/collect_handwriting';
-        var data = JSON.stringify({username:username, password:password, handwriting:dataURL});
+        var data = JSON.stringify({username:username, password:password, race:race, handwriting:dataURL});
         //Send using post
         fetch(URL, {
             method: "POST", // *GET, POST, PUT, DELETE, etc.
@@ -222,7 +225,7 @@
         (5-digit alphabetical letters) <br />
         <input id="password" type="password" name="password" style="width:300px;" placeholder="Don't submit real password!" maxlength="5" required/>
         <br />
-        <select id="race">
+        <select id="race" style="width:300px;">
             <option value="Select-your-race" selected="selected">-- Select your race --</option>
             <option value="American-Indian-or-Alaska-Native">American Indian or Alaska Native</option>
             <option value="Asian">Asian</option>
@@ -233,7 +236,7 @@
         </select>
         <br />
         <div class="description">
-            <p>Write down your password in the box below.<br />You need to rotate your screen horizontally.<br />Don't write it vertically!</p>
+            <p>Write down your password in the box below.<br />You need to <b><u>rotate your screen horizontally</u></b>.<br />Don't write it vertically!</p>
             <canvas id="canvasSignature" width="300px" height="600px" style="border:2px solid #000000;"></canvas>
         </div>
         <button type="button" onclick="sendData()" class="button">Submit</button>
