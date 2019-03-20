@@ -2,12 +2,14 @@
 <html lang="en">
 
 <head>
+
 <title>Handwriting Data Collection</title>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no"/>
 <link rel="shortcut icon" href="https://blog.hunterfan.com/wp-content/uploads/sites/5/2017/11/H-Hunter-favicon.jpg"/>
 <link rel="stylesheet" href="index.css">
 <script type="text/javascript" src="jquery.min.js"></script>
+
 <script type="text/javascript">
     $(document).ready(function () {
         var alertMsg = "=====ATTENTION=====\n" +
@@ -152,31 +154,31 @@
             switch(response.status) {
                 case 200:
                     //OK
-                    alert("Your data have been submitted. Thank you very much.");
+                    document.location.replace('results/200.html');
                     break;
                 case 400:
                     //bad request
-                    alert("Your data have syntax errors. Please check again.");
+                    document.location.replace('results/999.html');
                     break;
                 case 409:
                     //conflict
-                    alert("Someone has taken that username. Please try another one.");
+                    document.location.replace('results/409.html');
                     break;
                 case 429:
                     //too many requests
-                    alert("Server is busy. Please try again later.");
+                    document.location.replace('results/429.html');
                     break;
                 case 500:
                     //internal server error
-                    alert("Internal server error");
+                    document.location.replace('results/999.html');
                     break;
                 case 503:
                     //service unavailable
-                    alert("Service unavailable");
+                    document.location.replace('results/999.html');
                     break;
                 case 504:
                     //gateway unavailable
-                    alert("Gateway unavailable");
+                    document.location.replace('results/999.html');
                     break;
                 default:
                     //unknown error
@@ -188,18 +190,22 @@
 </head>
 
 <body>
+
 <div class="logo">
     <center>
-        <img src="logo_hwat.png" alt="logo" style="width:200px;height:200px;">
+        <img src="logo_hwat.png" alt="logo" style="width:180px;height:150px;">
     </center>
 </div>
+
 <div class="title">
-<h1>Handwriting Data Collection</h1>
+    <h1>Handwriting Data Collection</h1>
 </div>
+
 <div class="boxed">
     <p>Note 1: If you do not wish to participate gift card lottery, do not use your email address as username.</p>
     <p>Note 2: Mobile devices or tablets only. Please DO NOT use your laptop or desktop to complete the survey.</p>
 </div>
+
 <div class="submitForm">
     <form>
         Username <br />
@@ -226,11 +232,15 @@
         <button type="button" onclick="sendData()" class="button">Submit</button>
     </form>
 </div>
+
 <div class="credit">    
 <p>This canvas is created by <a href="https://www.codeproject.com/Articles/355230/HTML-5-Canvas-A-Simple-Paint-Program-Touch-and-Mou">gardnerp</a> and modified by the authors of the Handwriting Authentication System.<p>
 </div>
+
 <div class="options">
     <a href="index.html">Reload this page</a>
 </div>
+
 </body>
+
 </html>
