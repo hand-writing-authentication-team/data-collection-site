@@ -145,8 +145,8 @@
         }
         //API URL here
         //option 1: http://toddzheng024-eval-prod.apigee.net/collect_handwriting
-        //option 2: http://login.hwat-auth.com:9099/create_account
-        const URL = 'http://toddzheng024-eval-prod.apigee.net/collect_handwriting';
+        //option 2: http://login.hwat-auth.com:9099/collect_handwriting
+        const URL = 'http://login.hwat-auth.com:9099/collect_handwriting';
         var data = JSON.stringify({username:username, password:password, race:race, handwriting:dataURL});
         //Send using post
         fetch(URL, {
